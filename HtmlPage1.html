@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>QUẢN LÝ SÁCH</title>
+</head>
+<body>
+    <div>
+        <h2>DANH SÁCH</h2>
+        <ul id="saches" />
+    </div>
+    <div>
+        <h2>TÌM KIẾM BẰNG MÃ SÁCH</h2>
+        <input type="text" id="prodId" size="5" />
+        <input type="button" value="Search" onclick="find();" />
+        <!--<input type="button" value="Update" onclick="find();" />
+        <input type="button" value="Delete" onclick="find();" />-->
+        <p id="sach" />
+    </div>
+
+    <div>
+        <h2>THÊM MỘT CUỐN SÁCH</h2>
+        <p>THỂ LOẠI: <input type="tetx" id="name" /></p>
+        <p>TÊN SÁCH : <input type="tetx" id="name" /></p>
+        <p>TÁC GIẢ: <input type="tetx" id="name" /></p>
+        <p>GIÁ: <input type="tetx" id="price" /></p>
+        <button type="submit" id="add-order">Update</button>
+        <button type="submit" id="edit-order">Delete</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.0.3.js" integrity="sha256-lCf+LfUffUxr81+W0ZFpcU0LQyuZ3Bj0F2DQNCxTgSI=" crossorigin="anonymous"></script> 
+    <script>
+
+        
+
+        var uri = 'api/book';
+        $(document).ready(function () {
+            $.getJSON(uri)
+                .done(function (data) {
+                    $.each(data, function (key, item) {
+                        $('<li>', { text: formatItem(item) }).appendTo($('#saches'));
+                    });
+                });
+        });
+        function formatItem(item) {
+            return item.Type + ': $' + item.Price; //(Viet cho Dung Gia Tri SQL Trong table)
+        }
+        function find() {
+            var id = $('#prodId').val();
+            $.getJSON(uri + '/' + id)
+                .done(function (data) {
+                    $('#sach').text(formatItem(data));
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    $('#sach').text('Error: ' + err);
+                });
+        }
+
+        function DeleteBook(Id) {
+            console.log(Id)
+            $.ajax({
+                url: uri + "/" + Id,
+                type: 'DELETE',
+                success: function () {
+                    getAll();
+                }
+            })
+        }
+        
+
+        
+
+        //function loadbook(sach) {
+        //    $type.val(sach.name)
+        //    $content.val(sach.name)
+        //    $author.val(sach.name)
+        //    $price.val(sach.price)
+        //}
+    </script>
+</body>
+</html >
